@@ -14,8 +14,10 @@ type Task struct {
 type Tasks []Task
 
 func homePage(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Does it get here?")
 	fmt.Fprintf(w, "Welcome to the HomePage!")
 	fmt.Println("Endpoint Hit: homePage")
+	return
 }
 
 func returnAllTasks(w http.ResponseWriter, r *http.Request) {
@@ -27,10 +29,15 @@ func returnAllTasks(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint hit: returnAllTasks")
 
 	json.NewEncoder(w).Encode(tasks)
+	return
 }
 
 func main() {
-	http.HandleFunc("/", homePage)
-	http.HandleFunc("/all", returnAllTasks)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	mux := http.NewServeMux()
+	fmt.Println(mux)
+
+	mux.HandleFunc("/", homePage)
+	fmt.Println(mux)
+	mux.HandleFunc("/all", returnAllTasks)
+	log.Fatal(http.ListenAndServe(":8080", mux))
 }
