@@ -1,1 +1,1 @@
-# golandStdCrud
+# Golang Std CRUD
