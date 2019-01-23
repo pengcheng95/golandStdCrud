@@ -36,7 +36,9 @@ func returnAllTasks(w http.ResponseWriter, r *http.Request) {
 }
 
 func returnTaskStatus(w http.ResponseWriter, r *http.Request) {
+	queryParamters := r.URL.Query()
 	fmt.Println(r.Method, r.URL)
+	fmt.Println(queryParamters, queryParamters["test"])
 	fmt.Println(r)
 	w.Write([]byte(fmt.Sprintf("title:%s", r.Method)))
 }
