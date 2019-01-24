@@ -10,7 +10,8 @@ import (
 )
 
 type Task struct {
-	Title string `json:"Title"`
+	Title  string `json:"Title"`
+	Active bool   `json:"Active"`
 }
 
 type Tasks []Task
@@ -37,6 +38,23 @@ func returnAllTasks(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func addTask(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Endpoint hit: addTask")
+
+	var t Task
+	if r.Body == nil {
+		http.Error(w, "Please send a request body", 400)
+		return
+	}
+	err := json.NewDecoder(r.Body).Decode(&t)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+	tasksSlice = append(tasksSlice, t)
+	w.Write([]byte(fmt.Sprintf("Task Added")))
+}
+
 func returnTaskStatus(w http.ResponseWriter, r *http.Request) {
 	queryParamters := r.URL.Query()
 	fmt.Println(r.Method, r.URL)
@@ -54,6 +72,7 @@ func main() {
 	r.Route("/v1", func(r chi.Router) {
 		r.Route("/tasks", func(r chi.Router) {
 			r.Get("/allTasks", returnAllTasks)
+			r.Post("/addTask", addTask)
 		})
 	})
 	log.Fatal(http.ListenAndServe(":8080", r))
