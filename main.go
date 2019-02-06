@@ -84,14 +84,17 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 
 	if deleted {
 		// Marshal changes struct to JSON
-		deletedTaskJSON, err := json.Marshal(deletedTask)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
-		w.Write(deletedTaskJSON)
+		// deletedTaskJSON, err := json.Marshal(deletedTask)
+		// if err != nil {
+		// 	http.Error(w, err.Error(), 400)
+		// 	return
+		// }
+		// w.Write(deletedTaskJSON)
+
+		// Also works with json.NewEncoder
+		json.NewEncoder(w).Encode(deletedTask)
 	} else {
-		w.Write([]byte(fmt.Sprintf("Task Not Found")))
+		w.Write([]byte("Task Not Found"))
 	}
 }
 
